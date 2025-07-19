@@ -2,32 +2,77 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Video anschauen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discord Webhook Sender</title>
   <style>
     body {
-      max-width: 800px;
-      margin: 40px auto;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 10px;
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f0f2f5;
     }
-    video {
+    input, textarea, button {
+      display: block;
       width: 100%;
-      max-width: 800px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #5865F2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4752c4;
     }
   </style>
 </head>
 <body>
-  <h1>Mein Video</h1>
-  
-  <!-- Einfach dein Video hier verlinken -->
-  <video controls>
-    <source src="video1.mp4" type="video/mp4" />
-    Dein Browser unterstützt das Video nicht.
-  </video>
+  <h1>Discord Webhook Nachrichtensender</h1>
 
+  <label for="webhook">Webhook URL:</label>
+  <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/..." />
+
+  <label for="message">Nachricht:</label>
+  <textarea id="message" rows="4" placeholder="Deine Nachricht hier..."></textarea>
+
+  <button id="send">Senden</button>
+
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('send').addEventListener('click', () => {
+      const webhook = document.getElementById('webhook').value;
+      const message = document.getElementById('message').value;
+      const responseDiv = document.getElementById('response');
+
+      if (!webhook || !message) {
+        responseDiv.innerHTML = "Bitte fülle alle Felder aus.";
+        return;
+      }
+
+      fetch(webhook, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: message
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          responseDiv.innerHTML = "Nachricht erfolgreich gesendet.";
+        } else {
+          responseDiv.innerHTML = "Fehler beim Senden: " + res.status;
+        }
+      })
+      .catch(err => {
+        responseDiv.innerHTML = "Fehler: " + err;
+      });
+    });
+  </script>
 </body>
 </html>
