@@ -8,14 +8,14 @@
     body {
       font-family: sans-serif;
       padding: 20px;
-      background: #f0f2f5;
+      background: #f5f5f5;
     }
     input, textarea, button {
       display: block;
       width: 100%;
       margin-bottom: 15px;
       padding: 10px;
-      border-radius: 6px;
+      border-radius: 4px;
       border: 1px solid #ccc;
     }
     button {
@@ -30,7 +30,7 @@
   </style>
 </head>
 <body>
-  <h1>Discord Webhook Nachrichtensender</h1>
+  <h2>Discord Webhook Sender</h2>
 
   <label for="webhook">Webhook URL:</label>
   <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/..." />
@@ -38,41 +38,41 @@
   <label for="message">Nachricht:</label>
   <textarea id="message" rows="4" placeholder="Deine Nachricht hier..."></textarea>
 
-  <button id="send">Senden</button>
+  <button onclick="sendWebhook()">Senden</button>
 
   <div id="response"></div>
 
   <script>
-    document.getElementById('send').addEventListener('click', () => {
-      const webhook = document.getElementById('webhook').value;
-      const message = document.getElementById('message').value;
+    function sendWebhook() {
+      const url = document.getElementById('webhook').value;
+      const msg = document.getElementById('message').value;
       const responseDiv = document.getElementById('response');
 
-      if (!webhook || !message) {
-        responseDiv.innerHTML = "Bitte fülle alle Felder aus.";
+      if (!url || !msg) {
+        responseDiv.innerHTML = "Bitte Webhook URL und Nachricht eingeben.";
         return;
       }
 
-      fetch(webhook, {
+      fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          content: message
+          content: msg
         })
       })
       .then(res => {
         if (res.ok) {
-          responseDiv.innerHTML = "Nachricht erfolgreich gesendet.";
+          responseDiv.innerHTML = "✅ Nachricht erfolgreich gesendet.";
         } else {
-          responseDiv.innerHTML = "Fehler beim Senden: " + res.status;
+          responseDiv.innerHTML = "❌ Fehler beim Senden. Status: " + res.status;
         }
       })
       .catch(err => {
-        responseDiv.innerHTML = "Fehler: " + err;
+        responseDiv.innerHTML = "❌ Fehler: " + err;
       });
-    });
+    }
   </script>
 </body>
 </html>
